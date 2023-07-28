@@ -12,7 +12,7 @@ if (!isset($id) || !is_numeric($id)) {
 }
 
 // Query to fetch the record with the specified 'id' from the database
-$sql = "SELECT * FROM library_table WHERE id = $id";
+$sql = "SELECT * FROM animals WHERE id = $id";
 $result = mysqli_query($connect, $sql);
 
 // Check if a row is found with the given 'id'
@@ -24,7 +24,7 @@ if (!$row = mysqli_fetch_assoc($result)) {
 // Check if the delete action is confirmed by the user
 if (isset($_GET["confirm"]) && $_GET["confirm"] === "yes") {
   // Preparing the DELETE query to remove the record with the specified 'id'
-  $delete = "DELETE FROM `library_table` WHERE id = $id";
+  $delete = "DELETE FROM `animals` WHERE id = $id";
 
   // Executing the DELETE query
   if (mysqli_query($connect, $delete)) {
@@ -50,7 +50,7 @@ if (isset($_GET["confirm"]) && $_GET["confirm"] === "yes") {
   <h2>Delete Confirmation</h2>
   <p>Are you sure you want to delete this record?</p>
   <!-- Display the photo using an <img> tag -->
-  <img src="../pictures/<?php echo $row["image"]; ?>" alt="<?php echo $row["title"]; ?>" width="200" height="200">
+  "alt= "<?php echo $row["picture"]; ?>" alt="<?php echo $row["title"]; ?>" width="200" height="200">
   <p>
     <a href="delete.php?x=<?php echo $id; ?>&confirm=yes">Yes</a> |
     <a href="../dashboard.php">No</a>

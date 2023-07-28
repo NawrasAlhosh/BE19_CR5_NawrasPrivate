@@ -1,14 +1,13 @@
 <?php
 // Including the database connection file
 require_once "../db_connect.php";
-require_once "../file_upload.php";
 
 
 // Getting the 'x' parameter from the URL to identify the media to be updated
 $id = $_GET["x"];
 
 // Query to select the media record with the given ID
-$sql = "SELECT * FROM library_table WHERE id = $id";
+$sql = "SELECT * FROM animals WHERE id = $id";
 $result = mysqli_query($connect, $sql);
 
 // Checking if the query was successful
@@ -19,25 +18,24 @@ if ($result) {
   // Checking if the form was submitted for updating the media
   if (isset($_POST["update"])) {
     // Getting the updated values from the form
-    $title = $_POST["title"];
-    $ISBN_code = $_POST["ISBN_code"];
-    $short_description = $_POST["description"]; // corrected name from 'short_description' to 'description'
-    $type = $_POST["type"];
-    $author_first_name = $_POST["author_first_name"];
-    $author_last_name = $_POST["author_last_name"];
-    $publisher_name = $_POST["publisher_name"];
-    $publisher_address = $_POST["publisher_address"];
-    $publish_date = $_POST["publish_date"];
+    $name = $_POST["name"];
+    $species = $_POST["species"];
+    $age = $_POST["age"];
+    $size = $_POST["size"];
+    $picture = $_POST(["picture"]);
+    $vaccinated = $_POST["vaccinated"];
     $status = $_POST["status"];
+    $location = $_POST["location"];
 
-    if ($row["image"] != "product.jpeg") {
-      if (file_exists("../pictures/" . $row["image"])) {
-        unlink("../pictures/{$row['image']}");
-      }
-    }
+    // if ($row["picture"] != "product.jpeg") {
+    //   if (file_exists("../pictures/" . $row["image"])) {
+    //     unlink("../pictures/{$row['image']}");
+    //   }
+    // }
 
     // Query to update the media record with the new values
-    $sql = "UPDATE `library_table` SET `title`='$title',`image`='$image[0]',`ISBN_code`='$ISBN_code',`short_description`='$short_description',`type`='$type',`author_first_name`='$author_first_name',`author_last_name`='$author_last_name',`publisher_name`='$publisher_name',`publisher_address`='$publisher_address',`publish_date`='$publish_date',`status`='$status' WHERE id = $id";
+    $sql = "UPDATE `animals` SET `name`='$name', `species`='$species', `age`='$age', `size`='$size', `picture`='$picture[0]', `vaccinated`='$vaccinated', `status`='$status', `location`='$location' WHERE id = $id";
+
 
     // Executing the update query
     if (mysqli_query($connect, $sql)) {
@@ -59,14 +57,14 @@ if ($result) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <title>Update Media</title>
+  <title>Update Pets Info</title>
 </head>
 
 <body>
   <!-- navbar starts -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="../dashboard.php">My Library</a>
+      <a class="navbar-brand" href="../dashboard.php">My Bets</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -82,53 +80,57 @@ if ($result) {
   <!-- navbar ends -->
 
   <div class="container mt-5">
-    <h2>Update Media</h2>
-    <form method="post" enctype="multipart/form-data">
+    <h2>Update Pets</h2>
+    <form method="post">
       <!-- Displaying the current values of the media record in the form for updating -->
       <div class="mb-3 mt-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" class="form-control" name="title" area-describility="title" id="title" value="<?php echo $row["title"]; ?>" />
+        <label for="name" class="form-label">name</label>
+        <input type="text" class="form-control" name="name" area-describility="name" id="name" value="<?php echo $row["name"]; ?>" />
       </div>
       <div class="mb-3 mt-3">
-        <label for="ISBN_code" class="form-label">ISBN_code</label>
-        <input type="text" class="form-control" id="ISBN_code" name="ISBN_code" value="<?php echo $row["ISBN_code"]; ?>" />
+        <label for="species" class="form-label">species</label>
+        <input type="text" class="form-control" id="species" name="species" value="<?php echo $row["species"]; ?>" />
       </div>
       <div class="mb-3 mt-3">
-        <label for="image" class="form-label">Image</label>
-        <input type="file" class="form-control" name="image" area-describility="image" id="image" value="<?php echo $row["image"]; ?>" />
+        <label for="age" class="form-label">age</label>
+        <input type="number" class="form-control" name="age" area-describility="age" id="age" value="<?php echo $row["age"]; ?>" />
       </div>
       <div class="mb-3 mt-3">
-        <label for="description" class="form-label">Description</label>
-        <input type="text" class="form-control" name="description" area-describility="description" id="description" value="<?php echo $row["short_description"]; ?>" />
+        <label for="size" class="form-label">size</label>
+        <input type="text" class="form-control" name="size" area-describility="size" id="size" value="<?php echo $row["size"]; ?>" />
       </div>
       <div class="mb-3 mt-3">
-        <label for="type" class="form-label">Type</label>
-        <input type="text" class="form-control" name="type" area-describility="type" id="type" value="<?php echo $row["type"]; ?>" />
+        <label for="picture" class="form-label">picture</label>
+        <input type="text" class="form-control" name="picture" area-describility="picture" id="picture" value="<?php echo $row["picture"]; ?>" />
+      </div>
+      <!-- <div class="mb-3 mt-3">
+        <label for="vaccinated" class="form-label">vaccinated/label>
+          <input type="text" class="form-control" name="vaccinated" area-describility="vaccinated" id="vaccinated" value="<?php echo $row["vaccinated"]; ?>" />
+      </div> -->
+      <div class="mb-3 mt-3">
+        <label class="form-label">Vaccinated</label>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="vaccinated" id="yes" value="Yes">
+          <label class="form-check-label" for="yes">
+            Yes
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="vaccinated" id="no" value="No">
+          <label class="form-check-label" for="no">
+            No
+          </label>
+        </div>
       </div>
       <div class="mb-3 mt-3">
-        <label for="author_first_name" class="form-label">Author First Name</label>
-        <input type="text" class="form-control" name="author_first_name" area-describility="author_first_name" id="author_first_name" value="<?php echo $row["author_first_name"]; ?>" />
-      </div>
-      <div class="mb-3 mt-3">
-        <label for="author_last_name" class="form-label">Author Last Name</label>
-        <input type="text" class="form-control" name="author_last_name" area-describility="author_last_name" id="author_last_name" value="<?php echo $row["author_last_name"]; ?>" />
-      </div>
-      <div class="mb-3 mt-3">
-        <label for="publisher_name" class="form-label">Publisher Name</label>
-        <input type="text" class="form-control" name="publisher_name" area-describility="publisher_name" id="publisher_name" value="<?php echo $row["publisher_name"]; ?>" />
-      </div>
-      <div class="mb-3 mt-3">
-        <label for="publisher_address" class="form-label">Publisher Address</label>
-        <input type="text" class="form-control" name="publisher_address" area-describility="publisher_address" id="publisher_address" value="<?php echo $row["publisher_address"]; ?>" />
-      </div>
-      <div class="mb-3 mt-3">
-        <label for="publish_date" class="form-label">Publish Date</label>
-        <input type="text" class="form-control" name="publish_date" area-describility="publish_date" id="publish_date" value="<?php echo $row["publish_date"]; ?>" />
-      </div>
-      <div class="mb-3 mt-3">
-        <label for="status" class="form-label">Status</label>
+        <label for="status" class="form-label">status</label>
         <input type="text" class="form-control" name="status" area-describility="status" id="status" value="<?php echo $row["status"]; ?>" />
       </div>
+      <div class="mb-3 mt-3">
+        <label for="location" class="form-label">location</label>
+        <input type="text" class="form-control" name="location" area-describility="location" id="location" value="<?php echo $row["location"]; ?>" />
+      </div>
+
       <button type="submit" name="update" class="btn btn-primary">UPDATE</button>
     </form>
   </div>

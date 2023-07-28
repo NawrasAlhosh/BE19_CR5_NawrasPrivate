@@ -29,7 +29,6 @@ if (isset($_POST["login"])) {
   $email = cleanInputs($_POST["email"]);
   $password = cleanInputs($_POST["password"]);
 
-  // simple validation for the "date of birth"
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { // if the provided text is not a format of an email, error will be true
     $error = true;
     $emailError = "Please enter a valid email address";

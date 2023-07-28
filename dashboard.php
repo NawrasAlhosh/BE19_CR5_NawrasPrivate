@@ -53,9 +53,9 @@ if (mysqli_num_rows($result2) > 0) {
                         <p class='card-text'> vaccinated:{$row["vaccinated"]}</p>
                         <p class='card-text'>location:{$row["location"]}</p>
                         <p class='card-text'>size:{$row["size"]}<small class='text-muted'></small></p>
-                        <a href='crud/details.php?x={$row["id"]}' class='btn btn-primary mt-2'>Show Details</a>
-                        <a href='crud/update.php?x={$row["id"]}' class='btn btn-success mt-2'>Update</a>
-                        <a href='crud/delete.php?x={$row["id"]}' class='btn btn-danger mt-2'>Delete</a>
+                        <a href='crud/details.php?x={$row["id"]}' class='btn btn-outline-primary mt-2'>Show Details</a>
+                        <a href='crud/update.php?x={$row["id"]}' class='btn btn-outline-secondary mt-2'>Update</a>
+                        <a href='crud/delete.php?x={$row["id"]}' class='btn btn-outline-danger mt-2'>Delete</a>
                     </div>
                 </div>
             </div>";

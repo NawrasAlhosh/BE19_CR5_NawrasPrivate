@@ -62,6 +62,10 @@ if ($result) {
       <h1 style="text-align: center; margin-bottom: 30px;">Details about pets:</h1>
       <!-- Displaying media details in table rows -->
       <tr>
+        <th>Picture:</th>
+        <td><img src="<?= $row['picture'] ?>" alt="Animal Picture" style="width: 100px; height: 100px;"></td>
+      </tr>
+      <tr>
         <th>Name:</th>
         <td><?= $row["name"] ?></td>
       </tr>
@@ -76,10 +80,6 @@ if ($result) {
       <tr>
         <th>Size:</th>
         <td><?= $row["size"] ?></td>
-      </tr>
-      <tr>
-        <th>Picture:</th>
-        <td><?= $row["picture"] ?></td>
       </tr>
       <tr>
         <th>Vaccinated:</th>

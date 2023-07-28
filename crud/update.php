@@ -87,6 +87,10 @@ if ($result) {
     <form method="post">
       <!-- Displaying the current values of the media record in the form for updating -->
       <div class="mb-3 mt-3">
+        <label for="picture" class="form-label"></label>
+        <img src="<?php echo $row["picture"]; ?>" alt="Animal Picture" style="width: 100px; height: 100px;">
+      </div>
+      <div class="mb-3 mt-3">
         <label for="name" class="form-label">name</label>
         <input type="text" class="form-control" name="name" area-describility="name" id="name" value="<?php echo $row["name"]; ?>" />
       </div>
@@ -102,10 +106,8 @@ if ($result) {
         <label for="size" class="form-label">size</label>
         <input type="text" class="form-control" name="size" area-describility="size" id="size" value="<?php echo $row["size"]; ?>" />
       </div>
-      <div class="mb-3 mt-3">
-        <label for="picture" class="form-label">picture</label>
-        <input type="text" class="form-control" name="picture" area-describility="picture" id="picture" value="<?php echo $row["picture"]; ?>" />
-      </div>
+
+
       <!-- <div class="mb-3 mt-3">
         <label for="vaccinated" class="form-label">vaccinated/label>
           <input type="text" class="form-control" name="vaccinated" area-describility="vaccinated" id="vaccinated" value="<?php echo $row["vaccinated"]; ?>" />

@@ -1,23 +1,22 @@
 <?php
 require_once "../db_connect.php";
 
-if (isset($_POST["Add family_member"])) {
+if (isset($_POST["Add_family_member"])) {
   $name = $_POST["name"];
   $species = $_POST["species"];
   $age = $_POST["age"];
   $size = $_POST["size"];
-  $picture = $_POST(["picture"]);
-  $vaccinated = $_POST["vaccinated"];
+  $picture = $_POST["picture"];
+  $vaccinated = $_POST["vaccinated"]; // This will contain "Yes" or "No"
   $status = $_POST["status"];
   $location = $_POST["location"];
 
   // Using prepared statement to avoid SQL injection
   $stmt = $connect->prepare("INSERT INTO `animals` (`name`, `species`, `age`, `size`, `picture`, `vaccinated`, `status`, `location`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssssss", $name, $species, $age, $size, $picture[0], $vaccinated, $status, $location);
-
+  $stmt->bind_param("ssisssss", $name, $species, $age, $size, $picture, $vaccinated, $status, $location);
 
   if ($stmt->execute()) {
-    echo "<div class ='alert alert-success' role='alert'>New record has been Add family_memberd</div>";
+    echo "<div class='alert alert-success' role='alert'>New record has been added</div>";
     // header("refresh: 3; url=home.php");
   } else {
     echo "<div class='alert alert-danger' role='alert'>Error: " . $stmt->error . "</div>";
@@ -115,62 +114,55 @@ if (isset($_POST["Add family_member"])) {
 <!-- navbar ends -->
 
 <body>
+  <!-- Add your HTML content here -->
   <div class="container mt-5">
     <h2>Add New Pets</h2>
     <form method="post">
       <div class="mb-3 mt-3">
         <label for="name" class="form-label">name</label>
-        <input type="text" class="form-control" name="name" area-describility="name" id="name" />
+        <input type="text" class="form-control" name="name" aria-describedby="name" id="name" required>
       </div>
       <div class="mb-3 mt-3">
         <label for="species" class="form-label">species</label>
-        <input type="text" class="form-control" id="species" name="species" />
+        <input type="text" class="form-control" id="species" name="species" required>
       </div>
       <div class="mb-3 mt-3">
         <label for="age" class="form-label">age</label>
-        <input type="text" class="form-control" id="age" name="age" />
+        <input type="number" class="form-control" id="age" name="age" required>
       </div>
       <div class="mb-3 mt-3">
         <label for="size" class="form-label">size</label>
-        <input type="text" class="form-control" id="size" name="size" />
+        <input type="text" class="form-control" id="size" name="size" required>
       </div>
-
       <div class="mb-3 mt-3">
         <label for="picture" class="form-label">picture</label>
-        <input type="text" class="form-control" name="picture" area-describility="picture" id="picture" />
+        <input type="text" class="form-control" name="picture" aria-describedby="picture" id="picture" required>
       </div>
       <div class="mb-3 mt-3">
         <label class="form-label">Vaccinated</label>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="vaccinated" id="yes" value="Yes">
-          <label class="form-check-label" for="yes">
-            Yes
-          </label>
+          <input class="form-check-input" type="radio" name="vaccinated" id="yes" value="Yes" required>
+          <label class="form-check-label" for="yes">Yes</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="vaccinated" id="no" value="No">
-          <label class="form-check-label" for="no">
-            No
-          </label>
+          <input class="form-check-input" type="radio" name="vaccinated" id="no" value="No" required>
+          <label class="form-check-label" for="no">No</label>
         </div>
       </div>
-
       <div class="mb-3 mt-3">
         <label for="status" class="form-label">status</label>
-        <input type="text" class="form-control" name="status" area-describility="status" id="status" />
+        <input type="text" class="form-control" name="status" aria-describedby="status" id="status" required>
       </div>
       <div class="mb-3 mt-3">
         <label for="location" class="form-label">location</label>
-        <input type="text" class="form-control" name="location" area-describility="location" id="location" />
+        <input type="text" class="form-control" name="location" aria-describedby="location" id="location" required>
       </div>
-
-      <button type="submit" name="Add family_member" class="btn btn-primary">Add family_member</button>
+      <button type="submit" name="Add_family_member" class="btn btn-primary">Add family_member</button>
     </form>
   </div>
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- Add your JavaScript and Bootstrap script references here -->
 </body>
+
+</html>
 
 </html>

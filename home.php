@@ -17,9 +17,26 @@ if (isset($_SESSION["adm"])) {
 // Fetch the user's information from the database using their email (assuming you have the email stored in the session)
 if (isset($_SESSION["user"])) {
   $email = $_SESSION["user"];
-  $sqlUser = "SELECT first_name, last_name, email, picture FROM users WHERE email = '$email'";
+  $sqlUser = "SELECT id, first_name, last_name, email, picture FROM users WHERE email = '$email'";
   $resultUser = mysqli_query($connect, $sqlUser) or die(mysqli_error($connect));
   $userData = mysqli_fetch_assoc($resultUser);
+}
+
+// Function to handle the adoption process when the "Take me home" button is clicked
+function adoptPet($userId, $petId, $connect)
+{
+  $date = date('Y-m-d'); // Get the current date
+
+  // Insert a new record into the pet_adoption table with user_id, pet_id, and adoption_date
+  $sql = "INSERT INTO pet_adoption (user_id, pet_id, adoption_date) VALUES ('$userId', '$petId', '$date')";
+  mysqli_query($connect, $sql) or die(mysqli_error($connect));
+}
+
+// Check if the "Take me home" button is clicked
+if (isset($_POST["adopt_pet"])) {
+  $userId = $_SESSION["user_id"]; // Assuming you have the user_id stored in the session
+  $petId = $_POST["pet_id"]; // Get the pet_id from the submitted form
+  adoptPet($userId, $petId, $connect); // Call the function to handle the adoption process
 }
 
 // Query to select all records from the 'animals'
@@ -58,17 +75,19 @@ if (mysqli_num_rows($result2) > 0) {
                         <p class='card-text'>breed:{$row["species"]}</p>
                         <p class='card-text'>age:{$row["age"]}</p>
                         <p class='card-text'>status:{$row["status"]}</p>
-                        <p class='card-text'> vaccinated:{$row["vaccinated"]}</p>
+                        <p class='card-text'>vaccinated:{$row["vaccinated"]}</p>
                         <p class='card-text'>location:{$row["location"]}</p>
-                        <p class='card-text'>size:{$row["size"]}<small class='text-muted'></small></p>
-                        <a href='crud/details.php?x={$row["id"]}' class='btn btn-primary mt-2'>Show Details</a>";
+                        <p class='card-text'>size:{$row["size"]}<small class='text-muted'></small></p>";
 
-    // Only show the update and delete buttons if the user is not an administrator
-    if (!isset($_SESSION["adm"])) {
-      $layout .= "
-                        <a href='crud/update.php?x={$row["id"]}' class='btn btn-success mt-2'>Update</a>
-                        <a href='crud/delete.php?x={$row["id"]}' class='btn btn-danger mt-2'>Delete</a>";
-    }
+    // Add the "Take me home" button to adopt the pet
+    $layout .= "
+                    <form method='post'>
+                        <input type='hidden' name='pet_id' value='{$row["id"]}'>
+                        <button type='submit' name='adopt_pet' class='btn btn-success'>Take me home</button>
+                    </form>";
+
+    $layout .= "
+                    <a href='crud/details.php?x={$row["id"]}' class='btn btn-primary mt-2'>Show Details</a>";
 
     $layout .= "
                     </div>
@@ -114,7 +133,7 @@ if (mysqli_num_rows($result2) > 0) {
             <a class="nav-link active" aria-current="page" href="home.php">Home</a>
           </li>
         </ul>
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ml-auto"> <!-- Add ml-auto class here -->
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ml-auto">
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="logout.php?logout">Logout</a>
           </li>
@@ -130,8 +149,7 @@ if (mysqli_num_rows($result2) > 0) {
       <div class="row">
         <div class="col">
           <div class="alert alert-success" role="alert">
-            Welcome <?php echo $userData["first_name"] . " " . $userData["last_name"]; ?>!
-            Your email: <?php echo $userData["email"]; ?>
+            Welcome <?php echo $userData["first_name"] . " " . $userData["last_name"]; ?>!<?php echo $userData["email"]; ?>
           </div>
           <img src="<?php echo $userData["picture"]; ?>" alt="Profile Picture" width="100" height="100">
         </div>

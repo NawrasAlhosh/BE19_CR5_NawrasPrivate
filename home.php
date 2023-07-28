@@ -21,6 +21,69 @@ if (isset($_SESSION["user"])) {
   $resultUser = mysqli_query($connect, $sqlUser) or die(mysqli_error($connect));
   $userData = mysqli_fetch_assoc($resultUser);
 }
+
+// Query to select all records from the 'animals'
+$sql2 = "SELECT * FROM `animals`";
+
+// Executing the query and storing the result in the $result2 variable
+$result2 = mysqli_query($connect, $sql2) or die(mysqli_error($connect));
+
+// Initializing the $layout variable to store the HTML layout
+$layout = "";
+
+// Checking if there are any records returned from the query
+if (mysqli_num_rows($result2) > 0) {
+  // Building the HTML layout for displaying the media items in cards
+  $layout .= "
+    <style>
+        .card-img-top {
+            height: 200px; 
+            object-fit: cover; 
+        }
+        .card {
+            margin-top: 4rem; 
+        }
+    </style>
+    <div class='container'>
+        <div class='row'>";
+
+  // Looping through each record and building the card for each media item
+  while ($row = mysqli_fetch_assoc($result2)) {
+    $layout .= "
+            <div class='col-lg-4 col-md-6 col-sm-12 mb-4'>
+                <div class='card h-100'>
+                    <img src='{$row["picture"]}' class='card-img-top'>
+                    <div class='card-body'>
+                        <h5 class='card-title'>{$row["name"]}</h5>
+                        <p class='card-text'>breed:{$row["species"]}</p>
+                        <p class='card-text'>age:{$row["age"]}</p>
+                        <p class='card-text'>status:{$row["status"]}</p>
+                        <p class='card-text'> vaccinated:{$row["vaccinated"]}</p>
+                        <p class='card-text'>location:{$row["location"]}</p>
+                        <p class='card-text'>size:{$row["size"]}<small class='text-muted'></small></p>
+                        <a href='crud/details.php?x={$row["id"]}' class='btn btn-primary mt-2'>Show Details</a>";
+
+    // Only show the update and delete buttons if the user is not an administrator
+    if (!isset($_SESSION["adm"])) {
+      $layout .= "
+                        <a href='crud/update.php?x={$row["id"]}' class='btn btn-success mt-2'>Update</a>
+                        <a href='crud/delete.php?x={$row["id"]}' class='btn btn-danger mt-2'>Delete</a>";
+    }
+
+    $layout .= "
+                    </div>
+                </div>
+            </div>";
+  }
+
+  // Closing the HTML layout for the cards
+  $layout .= "
+        </div>
+    </div>";
+} else {
+  // If no records are found, display a message
+  $layout .= "<div class='container'><div class='row'><div class='col text-center'><h3>No Result</h3></div></div></div>";
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,6 +102,9 @@ if (isset($_SESSION["user"])) {
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="home.php">Animal Adoption</a>
+      <li class="nav-item">
+        <a class="nav-link" href="senior.php">Seniors</a>
+      </li>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -56,8 +122,6 @@ if (isset($_SESSION["user"])) {
       </div>
     </div>
   </nav>
-
-
   <!-- navbar ends -->
 
   <!-- Displaying the user's information -->

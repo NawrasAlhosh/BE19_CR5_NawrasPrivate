@@ -7,7 +7,7 @@ require_once "../db_connect.php";
 $id = $_GET["x"];
 
 // Query to fetch the record with the specified 'id' from the database
-$sql = "SELECT * FROM library_table WHERE id = $id";
+$sql = "SELECT * FROM animals WHERE id = $id";
 $result = mysqli_query($connect, $sql);
 
 // Checking if the query was successful and fetching the row data
@@ -24,7 +24,7 @@ if ($result) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Media Details</title>
+  <title>Pets Details</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 
@@ -32,7 +32,10 @@ if ($result) {
   <!-- navbar starts -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="../home.php">My Library</a>
+      <a class="navbar-brand" href="../home.php">Pets Details</a>
+      <li class="nav-item">
+        <a class="nav-link" href="../senior.php">Seniors</a>
+      </li>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -44,7 +47,7 @@ if ($result) {
           <!-- MJ Trick -->
           <?php if (isset($_SESSION["adm"])) { ?>
             <li class="nav-item">
-              <a class="nav-link active" href="create.php">Create a new Product</a>
+              <a class="nav-link active" href="create.php">Add family-member</a>
             </li>
           <?php } ?>
         </ul>
@@ -56,54 +59,40 @@ if ($result) {
   <!-- Media details table -->
   <div class="container mt-4">
     <table class="table table-bordered" style="background-color: #f8f9fa; text-align: center;">
-      <h1 style="text-align: center; margin-bottom: 30px;">Details about the media:</h1>
+      <h1 style="text-align: center; margin-bottom: 30px;">Details about pets:</h1>
       <!-- Displaying media details in table rows -->
       <tr>
-        <th>Title:</th>
-        <td><?= $row["title"] ?></td>
+        <th>Name:</th>
+        <td><?= $row["name"] ?></td>
       </tr>
       <tr>
-        <th>Type:</th>
-        <td><?= $row["type"] ?></td>
+        <th>Species</th>
+        <td><?= $row["species"] ?></td>
       </tr>
       <tr>
-        <th>Publish Date:</th>
-        <td><?= $row["publish_date"] ?></td>
+        <th>Age:</th>
+        <td><?= $row["age"] ?></td>
       </tr>
       <tr>
-        <th>Author:</th>
-        <td><?= $row["author_first_name"] . " " . $row["author_last_name"] ?></td>
+        <th>Size:</th>
+        <td><?= $row["size"] ?></td>
       </tr>
       <tr>
-        <th>ISBN:</th>
-        <td><?= $row["ISBN_code"] ?></td>
+        <th>Picture:</th>
+        <td><?= $row["picture"] ?></td>
       </tr>
       <tr>
-        <th>Publisher Address:</th>
-        <td><?= $row["publisher_address"] ?></td>
-      </tr>
-      <tr>
-        <th>Publisher Name:</th>
-        <td>
-          <?= $row["publisher_name"] ?>
-          <button class="btn btn-outline-primary btn-sm">
-            <a href="publisher.php?x=<?= urlencode($row["publisher_name"]) ?>">View All Media by this Publisher</a>
-          </button>
-        </td>
-      </tr>
-      <tr>
-        <th>Short Description:</th>
-        <td><?= $row["short_description"] ?></td>
+        <th>Vaccinated:</th>
+        <td><?= $row["vaccinated"] ?></td>
       </tr>
       <tr>
         <th>Status:</th>
-        <td><?= $row["status"] ?></td>
+        <td>
+          <?= $row["status"] ?></td>
       </tr>
       <tr>
-        <th>Image:</th>
-        <td>
-          <img src="<?= $row["image"] ?>" alt="Media Image" style="max-width: 200px;">
-        </td>
+        <th>Location:</th>
+        <td><?= $row["location"] ?></td>
       </tr>
     </table>
   </div>

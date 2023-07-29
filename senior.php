@@ -3,7 +3,7 @@
 require_once "db_connect.php";
 
 // Fetch senior animals from the database (older than 8 years)
-$sql = "SELECT * FROM animals WHERE age > 8";
+$sql = "SELECT * FROM animals WHERE age >= 8";
 $result = mysqli_query($connect, $sql);
 
 ?>
@@ -31,7 +31,7 @@ $result = mysqli_query($connect, $sql);
           <a class="nav-link active" aria-current="page" href="home.php">Home</a>
         </li>
       </ul>
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ml-auto"> <!-- Add ml-auto class here -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ml-auto">
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="logout.php?logout">Logout</a>
         </li>

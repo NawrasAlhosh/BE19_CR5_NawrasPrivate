@@ -22,28 +22,28 @@ if (isset($_SESSION["user_id"])) {
   $row = mysqli_fetch_assoc($resultUser);
 }
 
-// Function to handle the adoption process when the "Take me home" button is clicked
-function adoptPet($userId, $petId, $connect)
-{
-  $date = date('Y-m-d'); // Get the current date
+// // Function to handle the adoption process when the "Take me home" button is clicked
+// function adoptPet($userId, $petId, $connect)
+// {
+//   $date = date('Y-m-d'); // Get the current date
 
-  // Insert a new record into the pet_adoption table with user_id, pet_id, and adoption_date
-  $sql = "INSERT INTO pet_adoption (user_id, pet_id, adoption_date) VALUES ('$userId', '$petId', '$date')";
-  mysqli_query($connect, $sql) or die(mysqli_error($connect));
-}
+//   // Insert a new record into the pet_adoption table with user_id, pet_id, and adoption_date
+//   $sql = "INSERT INTO pet_adoption (user_id, pet_id, adoption_date) VALUES ('$userId', '$petId', '$date')";
+//   mysqli_query($connect, $sql) or die(mysqli_error($connect));
+// }
 
-// Check if the "Take me home" button is clicked
-if (isset($_POST["adopt_pet"])) {
-  if (isset($_SESSION["user_id"])) {
-    $userId = $_SESSION["user_id"]; // Assuming the user_id stored in the session
-    $petId = $_POST["pet_id"]; // Get the pet_id from the submitted form
-    adoptPet($userId, $petId, $connect); // Call the function to handle the adoption process
-  } else {
-    // Handle the case when user_id is not set (e.g., redirect to login page)
-    header("Location: login.php");
-    exit();
-  }
-}
+// // Check if the "Take me home" button is clicked
+// if (isset($_POST["adopt_pet"])) {
+//   if (isset($_SESSION["user_id"])) {
+//     $userId = $_SESSION["user_id"]; // Assuming the user_id stored in the session
+//     $petId = $_POST["pet_id"]; // Get the pet_id from the submitted form
+//     adoptPet($userId, $petId, $connect); // Call the function to handle the adoption process
+//   } else {
+//     // Handle the case when user_id is not set (e.g., redirect to login page)
+//     header("Location: login.php");
+//     exit();
+//   }
+// }
 
 // Query to select all records from the 'animals'
 $sql2 = "SELECT * FROM `animals`";
@@ -83,13 +83,11 @@ if (mysqli_num_rows($result2) > 0) {
 
     // Add the "Take me home" button to adopt the pet
     $layout .= "
-                    <form method='post'>
-                        <input type='hidden' name='pet_id' value='{$row["id"]}'>
-                        <button type='submit' name='adopt_pet' class='btn btn-outline-success'>Take me home</button>
-                    </form>";
+    <a href='take_me_home.php?id={$row['id']}'>
+<button type='submit' name='adopt' class='btn btn-outline-success'>Adopt Me</button></a>";
 
     $layout .= "
-                    <a href='crud/details.php?x={$row["id"]}' class='btn btn-outline-primary mt-2'>Show Details</a>";
+                    <a href='crud/details.php?x={$row["id"]}' class='btn btn-outline-primary '>Show Details</a>";
 
     $layout .= "
                     </div>
@@ -105,7 +103,9 @@ if (mysqli_num_rows($result2) > 0) {
   // If no records are found, display a message
   $layout .= "<div class='container'><div class='row'><div class='col text-center'><h3>No Result</h3></div></div></div>";
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -117,6 +117,9 @@ if (mysqli_num_rows($result2) > 0) {
   <title>Welcome <?php echo $row["first_name"]; ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
+
+
+
 
 <body>
   <!-- navbar starts -->

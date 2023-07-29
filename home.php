@@ -14,37 +14,6 @@ if (isset($_SESSION["adm"])) {
   exit();
 }
 
-// Fetch the user's information from the database using their user_id (assuming you have the user_id stored in the session)
-if (isset($_SESSION["user_id"])) {
-  $userId = $_SESSION["user_id"];
-  $sqlUser = "SELECT * FROM users WHERE id = $userId";
-  $resultUser = mysqli_query($connect, $sqlUser) or die(mysqli_error($connect));
-  $row = mysqli_fetch_assoc($resultUser);
-}
-
-// // Function to handle the adoption process when the "Take me home" button is clicked
-// function adoptPet($userId, $petId, $connect)
-// {
-//   $date = date('Y-m-d'); // Get the current date
-
-//   // Insert a new record into the pet_adoption table with user_id, pet_id, and adoption_date
-//   $sql = "INSERT INTO pet_adoption (user_id, pet_id, adoption_date) VALUES ('$userId', '$petId', '$date')";
-//   mysqli_query($connect, $sql) or die(mysqli_error($connect));
-// }
-
-// // Check if the "Take me home" button is clicked
-// if (isset($_POST["adopt_pet"])) {
-//   if (isset($_SESSION["user_id"])) {
-//     $userId = $_SESSION["user_id"]; // Assuming the user_id stored in the session
-//     $petId = $_POST["pet_id"]; // Get the pet_id from the submitted form
-//     adoptPet($userId, $petId, $connect); // Call the function to handle the adoption process
-//   } else {
-//     // Handle the case when user_id is not set (e.g., redirect to login page)
-//     header("Location: login.php");
-//     exit();
-//   }
-// }
-
 // Query to select all records from the 'animals'
 $sql2 = "SELECT * FROM `animals`";
 
@@ -58,17 +27,18 @@ $layout = "";
 if (mysqli_num_rows($result2) > 0) {
   // Building the HTML layout for displaying the media items in cards
   $layout .= "
-    <style>
-        .card-img-top {
-            height: 200px; 
-            object-fit: cover; 
-        }
-        .card {
-            margin-top: 4rem; 
-        }
-    </style>
-    <div class='container'>
-        <div class='row'>";
+        <style>
+            .card-img-top {
+                height: 200px; 
+                object-fit: cover; 
+            }
+            .card {
+                margin-top: 4rem;
+                height: 400px; /* Set a fixed height for all cards */
+            }
+        </style>
+        <div class='container'>
+            <div class='row'>";
 
   // Looping through each record and building the card for each media item
   while ($row = mysqli_fetch_assoc($result2)) {
@@ -81,16 +51,21 @@ if (mysqli_num_rows($result2) > 0) {
                         <p class='card-text'>breed:{$row["species"]}</p>
                         <p class='card-text'>age:{$row["age"]}</p>";
 
-    // Add the "Take me home" button to adopt the pet
-    $layout .= "
-    <a href='take_me_home.php?id={$row['id']}'>
-<button type='submit' name='adopt' class='btn btn-outline-success'>Adopt Me</button></a>";
+    // Check the pet's status and display the appropriate button
+    if ($row["status"] === 'Available' && isset($_SESSION["user"])) {
+      $layout .= "<form action='home.php' method='POST'>
+                            <input type='hidden' name='pet_id' value='{$row["id"]}'>
+                            <button type='submit' name='adopt' class='btn btn-outline-primary'>Take me home</button>
+                        </form>";
+    } else {
+      $status = $row["status"] === 'Adopted' ? 'Adopted' : 'Available';
+      $layout .= "<p>Status: $status</p>";
+    }
 
-    $layout .= "
-                    <a href='crud/details.php?x={$row["id"]}' class='btn btn-outline-primary '>Show Details</a>";
+    // Details button for each pet card
+    $layout .= "<a href='details.php?id={$row["id"]}' class='btn btn-dark'>Details</a>";
 
-    $layout .= "
-                    </div>
+    $layout .= "</div>
                 </div>
             </div>";
   }
@@ -100,12 +75,28 @@ if (mysqli_num_rows($result2) > 0) {
         </div>
     </div>";
 } else {
-  // If no records are found, display a message
-  $layout .= "<div class='container'><div class='row'><div class='col text-center'><h3>No Result</h3></div></div></div>";
+  $layout .= "No results found!";
 }
 
-?>
+// Handling the adoption process when the "Take me home" button is clicked
+if (isset($_POST["adopt"]) && isset($_SESSION["user"])) {
+  $pet_id = $_POST["pet_id"];
+  $user_id = $_SESSION["user"];
+  $adoption_date = date("Y-m-d");
 
+  // Update the pet status to 'Adopted'
+  $sql = "UPDATE animals SET status = 'Adopted' WHERE id = $pet_id";
+  mysqli_query($connect, $sql);
+
+  // Insert a new record in the pet_adoption table
+  $sql = "INSERT INTO pet_adoption (user_id, pet_id, adoption_date) VALUES ('$user_id', '$pet_id', '$adoption_date')";
+  mysqli_query($connect, $sql);
+
+  // Refresh the page after adoption to update the pet status and remove the button
+  header("Location: home.php");
+  exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -117,9 +108,6 @@ if (mysqli_num_rows($result2) > 0) {
   <title>Welcome <?php echo $row["first_name"]; ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-
-
-
 
 <body>
   <!-- navbar starts -->
@@ -160,7 +148,9 @@ if (mysqli_num_rows($result2) > 0) {
     <div class="container mt-3">
       <div class="row">
         <div class="col">
-          <div class="alert alert-success" role="alert">
+          <div class="alert alert-success
+
+" role="alert">
             Welcome <?php echo $userData["first_name"] . " " . $userData["last_name"]; ?>! <?php echo $userData["email"]; ?>
           </div>
           <img src="<?php echo $userData["picture"]; ?>" alt="Profile Picture" width="100" height="100">

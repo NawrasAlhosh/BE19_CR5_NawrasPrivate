@@ -2,7 +2,6 @@
 // Including the database connection file
 require_once "../db_connect.php";
 
-
 // Getting the 'x' parameter from the URL to identify the media to be updated
 $id = $_GET["x"];
 
@@ -22,20 +21,13 @@ if ($result) {
     $species = $_POST["species"];
     $age = $_POST["age"];
     $size = $_POST["size"];
-    $picture = $_POST(["picture"]);
+    $picture = $_POST["picture"]; // Corrected the syntax here
     $vaccinated = $_POST["vaccinated"];
     $status = $_POST["status"];
     $location = $_POST["location"];
 
-    // if ($row["picture"] != "product.jpeg") {
-    //   if (file_exists("../pictures/" . $row["image"])) {
-    //     unlink("../pictures/{$row['image']}");
-    //   }
-    // }
-
     // Query to update the media record with the new values
-    $sql = "UPDATE `animals` SET `name`='$name', `species`='$species', `age`='$age', `size`='$size', `picture`='$picture[0]', `vaccinated`='$vaccinated', `status`='$status', `location`='$location' WHERE id = $id";
-
+    $sql = "UPDATE `animals` SET `name`='$name', `species`='$species', `age`='$age', `size`='$size', `picture`='$picture', `vaccinated`='$vaccinated', `status`='$status', `location`='$location' WHERE id = $id";
 
     // Executing the update query
     if (mysqli_query($connect, $sql)) {

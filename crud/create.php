@@ -132,11 +132,11 @@ if (isset($_POST["Add_family_member"])) {
       </div>
       <div class="mb-3 mt-3">
         <label for="size" class="form-label">size</label>
-        <input type="text" class="form-control" id="size" name="size" required>
+        <input type="text" class="form-control" id="size" name="size">
       </div>
       <div class="mb-3 mt-3">
         <label for="picture" class="form-label">picture</label>
-        <input type="text" class="form-control" name="picture" aria-describedby="picture" id="picture" required>
+        <input type="text" class="form-control" name="picture" aria-describedby="picture" id="picture">
       </div>
       <div class="mb-3 mt-3">
         <label class="form-label">Vaccinated</label>
@@ -145,17 +145,17 @@ if (isset($_POST["Add_family_member"])) {
           <label class="form-check-label" for="yes">Yes</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="vaccinated" id="no" value="No" required>
+          <input class="form-check-input" type="radio" name="vaccinated" id="no" value="No">
           <label class="form-check-label" for="no">No</label>
         </div>
       </div>
       <div class="mb-3 mt-3">
         <label for="status" class="form-label">status</label>
-        <input type="text" class="form-control" name="status" aria-describedby="status" id="status" required>
+        <input type="text" class="form-control" name="status" aria-describedby="status" id="status">
       </div>
       <div class="mb-3 mt-3">
         <label for="location" class="form-label">location</label>
-        <input type="text" class="form-control" name="location" aria-describedby="location" id="location" required>
+        <input type="text" class="form-control" name="location" aria-describedby="location" id="location">
       </div>
       <button type="submit" name="Add_family_member" class="btn btn-primary">Add family_member</button>
     </form>

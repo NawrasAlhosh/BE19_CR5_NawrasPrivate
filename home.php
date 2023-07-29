@@ -14,12 +14,12 @@ if (isset($_SESSION["adm"])) {
   exit();
 }
 
-// Fetch the user's information from the database using their email (assuming you have the email stored in the session)
-if (isset($_SESSION["user"])) {
-  $email = $_SESSION["user"];
-  $sqlUser = "SELECT id, first_name, last_name, email, picture FROM users WHERE email = '$email'";
+// Fetch the user's information from the database using their user_id (assuming you have the user_id stored in the session)
+if (isset($_SESSION["user_id"])) {
+  $userId = $_SESSION["user_id"];
+  $sqlUser = "SELECT * FROM users WHERE id = $userId";
   $resultUser = mysqli_query($connect, $sqlUser) or die(mysqli_error($connect));
-  $userData = mysqli_fetch_assoc($resultUser);
+  $row = mysqli_fetch_assoc($resultUser);
 }
 
 // Function to handle the adoption process when the "Take me home" button is clicked
@@ -34,9 +34,15 @@ function adoptPet($userId, $petId, $connect)
 
 // Check if the "Take me home" button is clicked
 if (isset($_POST["adopt_pet"])) {
-  $userId = $_SESSION["user_id"]; // Assuming you have the user_id stored in the session
-  $petId = $_POST["pet_id"]; // Get the pet_id from the submitted form
-  adoptPet($userId, $petId, $connect); // Call the function to handle the adoption process
+  if (isset($_SESSION["user_id"])) {
+    $userId = $_SESSION["user_id"]; // Assuming the user_id stored in the session
+    $petId = $_POST["pet_id"]; // Get the pet_id from the submitted form
+    adoptPet($userId, $petId, $connect); // Call the function to handle the adoption process
+  } else {
+    // Handle the case when user_id is not set (e.g., redirect to login page)
+    header("Location: login.php");
+    exit();
+  }
 }
 
 // Query to select all records from the 'animals'
@@ -73,21 +79,17 @@ if (mysqli_num_rows($result2) > 0) {
                     <div class='card-body'>
                         <h5 class='card-title'>{$row["name"]}</h5>
                         <p class='card-text'>breed:{$row["species"]}</p>
-                        <p class='card-text'>age:{$row["age"]}</p>
-                        <p class='card-text'>status:{$row["status"]}</p>
-                        <p class='card-text'>vaccinated:{$row["vaccinated"]}</p>
-                        <p class='card-text'>location:{$row["location"]}</p>
-                        <p class='card-text'>size:{$row["size"]}<small class='text-muted'></small></p>";
+                        <p class='card-text'>age:{$row["age"]}</p>";
 
     // Add the "Take me home" button to adopt the pet
     $layout .= "
                     <form method='post'>
                         <input type='hidden' name='pet_id' value='{$row["id"]}'>
-                        <button type='submit' name='adopt_pet' class='btn btn-success'>Take me home</button>
+                        <button type='submit' name='adopt_pet' class='btn btn-outline-success'>Take me home</button>
                     </form>";
 
     $layout .= "
-                    <a href='crud/details.php?x={$row["id"]}' class='btn btn-primary mt-2'>Show Details</a>";
+                    <a href='crud/details.php?x={$row["id"]}' class='btn btn-outline-primary mt-2'>Show Details</a>";
 
     $layout .= "
                     </div>
@@ -112,7 +114,7 @@ if (mysqli_num_rows($result2) > 0) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animal Adoption</title>
+  <title>Welcome <?php echo $row["first_name"]; ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 
@@ -145,11 +147,18 @@ if (mysqli_num_rows($result2) > 0) {
 
   <!-- Displaying the user's information -->
   <?php if (isset($_SESSION["user"])) : ?>
+    <?php
+    // Fetch the user's information from the database using their email
+    $email = $_SESSION["user"];
+    $sqlUser = "SELECT id, first_name, last_name, email, picture FROM users WHERE email = '$email'";
+    $resultUser = mysqli_query($connect, $sqlUser) or die(mysqli_error($connect));
+    $userData = mysqli_fetch_assoc($resultUser);
+    ?>
     <div class="container mt-3">
       <div class="row">
         <div class="col">
           <div class="alert alert-success" role="alert">
-            Welcome <?php echo $userData["first_name"] . " " . $userData["last_name"]; ?>!<?php echo $userData["email"]; ?>
+            Welcome <?php echo $userData["first_name"] . " " . $userData["last_name"]; ?>! <?php echo $userData["email"]; ?>
           </div>
           <img src="<?php echo $userData["picture"]; ?>" alt="Profile Picture" width="100" height="100">
         </div>
